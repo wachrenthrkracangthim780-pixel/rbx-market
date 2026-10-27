@@ -1,0 +1,71 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RBX MARKET</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#101010;color:white;font-family:Arial,sans-serif}
+header{background:#1a1a1a;padding:24px 16px;border-bottom:3px solid #e21b2d}
+h1{margin:0;color:#ff2638}
+header p{color:#bbb}
+main{max-width:900px;margin:auto;padding:20px}
+input,select,button{padding:12px;border-radius:8px;border:1px solid #444;font-size:15px}
+input,select{background:#222;color:white;width:100%;margin:6px 0}
+button{background:#e21b2d;color:white;border:0;font-weight:bold}
+.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px}
+.card{background:#1d1d1d;border:1px solid #383838;border-radius:12px;padding:16px}
+.price{font-size:23px;color:#ff3546;font-weight:bold}
+a.contact{display:block;text-align:center;text-decoration:none;background:#e21b2d;color:white;padding:12px;border-radius:8px;margin-top:12px}
+.small{color:#aaa;font-size:13px;line-height:1.6}
+</style>
+</head>
+<body>
+<header>
+<h1>RBX MARKET</h1>
+<p>ตลาดประกาศซื้อขาย Roblox • โทนแดงดำ</p>
+</header>
+<main>
+<h2>ค้นหารายการ</h2>
+<input id="q" placeholder="พิมพ์ชื่อรายการ..." oninput="show()">
+<select id="cat" onchange="show()">
+<option value="">ทุกหมวดหมู่</option>
+<option>บัญชี Roblox</option>
+<option>ไอเทม</option>
+<option>บริการ</option>
+</select>
+<div id="products" class="products"></div>
+<h2>ลงประกาศ</h2>
+<form id="form">
+<input id="name" placeholder="ชื่อรายการ" required>
+<select id="type"><option>บัญชี Roblox</option><option>ไอเทม</option><option>บริการ</option></select>
+<input id="price" type="number" min="1" placeholder="ราคา (บาท)" required>
+<input id="link" type="url" placeholder="ลิงก์ติดต่อผู้ขาย https://..." required>
+<button type="submit">เพิ่มรายการ</button>
+</form>
+<p class="small">รายการที่เพิ่มจะแสดงเฉพาะในหน้านี้และเบราว์เซอร์ปัจจุบัน ยังไม่มีระบบสมาชิกหรือชำระเงินจริง อย่าให้รหัสผ่านหรือคุกกี้บัญชีกับใคร และตรวจสอบกฎของ Roblox ก่อนทำธุรกรรม</p>
+</main>
+<script>
+let data=[
+{name:"ตัวอย่างรายการ",type:"ไอเทม",price:50,link:"https://www.roblox.com/"},
+{name:"ตัวอย่างบริการ",type:"บริการ",price:20,link:"https://www.roblox.com/"}
+];
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function show(){
+let q=document.getElementById('q').value.toLowerCase(),c=document.getElementById('cat').value;
+let list=data.filter(x=>x.name.toLowerCase().includes(q)&&(!c||x.type===c));
+document.getElementById('products').innerHTML=list.map(x=>'<div class="card"><h3>'+esc(x.name)+'</h3><p>'+esc(x.type)+'</p><div class="price">'+Number(x.price).toLocaleString()+' บาท</div><a class="contact" href="'+esc(x.link)+'" target="_blank" rel="noopener">ติดต่อผู้ขาย</a></div>').join('')||'<p>ไม่พบรายการ</p>';
+}
+document.getElementById('form').addEventListener('submit',e=>{
+e.preventDefault();
+let link=document.getElementById('link').value;
+if(!link.startsWith('https://')){alert('กรุณาใช้ลิงก์ HTTPS');return}
+data.unshift({name:document.getElementById('name').value,type:document.getElementById('type').value,price:Number(document.getElementById('price').value),link});
+show();e.target.reset();alert('เพิ่มรายการในหน้านี้แล้ว');
+});
+show();
+</script>
+</body>
+</html>
